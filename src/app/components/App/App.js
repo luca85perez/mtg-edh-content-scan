@@ -6,6 +6,12 @@ import ColorFilter from '../ColorFilter/ColorFilter';
 import CommandersContainer from '../CommandersContainer/CommandersContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
 
+/**
+ *
+ *
+ * @class App
+ * @extends {Component}
+ */
 class App extends Component {
   constructor() {
     super();
@@ -16,44 +22,85 @@ class App extends Component {
     };
   }
 
-  onColorFilter = ({ selectedColors }) => {
-    window
-      .fetch(
+  /**
+   *
+   *
+   * @memberof App
+   */
+  onClearFilter = () => {
+    this.setState({
+      commanders: [],
+      videos: [],
+    });
+  }
+
+  /**
+   *
+   *
+   * @memberof App
+   */
+  onColorFilter = state => {
+    const checkedItens = state.checkedItems;
+    const selectedColors = [];
+    checkedItens.forEach((isChecked, name) => {
+      if (isChecked) {
+        selectedColors.push(name);
+      }
+    });
+
+    if (selectedColors.length) {
+      fetch(
         `https://api.scryfall.com/cards/search?q=identity=${selectedColors.join('')}+is:commander`
       )
-      .then((response) => response.json())
-      .then((result) => {
+      .then(response => response.json())
+      .then(result => {
         const { data } = result;
 
         this.setState({
           commanders: data,
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Failed retrieving information', err);
       });
+    }
   }
 
-  onCommanderSelect = (name) => {
-    window
-      .fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${name}+edh&order=viewCount&type=video&key=AIzaSyAXzdppHQxlLzFc9UV9SmcIdLz9zEtkA50`)
-      .then((response) => response.json())
-      .then((result) => {
-        const { items } = result;
+  /**
+   *
+   *
+   * @memberof App
+   */
+  onCommanderSelect = name => {
+    fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${name}+edh&order=viewCount&type=video&key=AIzaSyAXzdppHQxlLzFc9UV9SmcIdLz9zEtkA50`
+    )
+    .then(response => response.json())
+    .then(result => {
+      const { items } = result;
 
-        this.setState({
-          videos: items,
-        });
-      })
-      .catch((err) => {
-        console.error('Failed retrieving information', err);
+      this.setState({
+        videos: items,
       });
+    })
+    .catch(err => {
+      console.error('Failed retrieving information', err);
+    });
   }
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof App
+   */
   render() {
     return (
       <div>
-        <ColorFilter onFilter={this.onColorFilter} />
+        <ColorFilter
+          onFilter={this.onColorFilter}
+          onClearFilter={this.onClearFilter}
+        />
         <CommandersContainer
           commanders={this.state.commanders}
           onCommanderSelect={this.onCommanderSelect}

@@ -5,58 +5,112 @@ import ColorOption from './ColorOption/ColorOption';
 
 type Props = {
   onFilter: any,
+  onClearFilter: any,
 };
 
+/**
+ *
+ *
+ * @class ColorFilter
+ * @extends {Component<Props>}
+ */
 class ColorFilter extends Component<Props> {
   constructor() {
     super();
 
+    const availableColors = [
+      {
+        name: 'w',
+        longName: 'White',
+      },
+      {
+        name: 'u',
+        longName: 'Blue',
+      },
+      {
+        name: 'b',
+        longName: 'Black',
+      },
+      {
+        name: 'r',
+        longName: 'Red',
+      },
+      {
+        name: 'g',
+        longName: 'Green',
+      },
+      {
+        name: 'c',
+        longName: 'Colorless',
+      },
+    ];
+
+    const checkedItems = new Map();
+    availableColors.map(color => {
+      return checkedItems.set(color.name, false)
+    });
+
     this.state = {
-      availableColors: [
-        'w',
-        'u',
-        'b',
-        'r',
-        'g',
-        'c',
-      ],
-      selectedColors: [],
+      availableColors,
+      checkedItems,
     };
   }
 
+  /**
+   *
+   *
+   * @memberof ColorFilter
+   */
   onColorOption = (e, option) => {
-    const target = e.target;
-    const isChecked = target.checked;
+    const isChecked = e.target.checked;
 
-    if (isChecked) {
-      this.setState((prevState) => ({
-        selectedColors: [
-          ...prevState.selectedColors,
-          option
-        ],
-      }));
-    } else {
-      this.setState((prevState) => ({
-        selectedColors: prevState.selectedColors.filter((color) => color !== option),
-      }));
-    }
+    this.setState(prevState => ({
+      checkedItems: prevState.checkedItems.set(option.name, isChecked)
+    }));
   }
 
+  /**
+   *
+   *
+   * @memberof ColorFilter
+   */
+  onClear = () => {
+    const checkedItems = new Map();
+    this.state.availableColors.map(color => {
+      return checkedItems.set(color.name, false)
+    });
+
+    this.setState({
+      checkedItems,
+    });
+
+    this.props.onClearFilter();
+  }
+
+  /**
+   *
+   *
+   * @returns
+   * @memberof ColorFilter
+   */
   render() {
     return (
       <div>
         {
-          this.state.availableColors.map((color) => {
+          this.state.availableColors.map(color => {
             return (
               <ColorOption
-                key={color}
+                key={color.name}
                 option={color}
+                checked={this.state.checkedItems.get(color.name)}
                 onChange={this.onColorOption}
               />
             );
           })
         }
+
         <button onClick={() => this.props.onFilter(this.state)}>Pesquisar</button>
+        <button onClick={this.onClear}>Limpar</button>
       </div>
     );
   }

@@ -15,12 +15,18 @@ type Props = {
   onCommanderSelect: Function;
 };
 
+/**
+ *
+ *
+ * @class CommandersContainer
+ * @extends {Component<Props>}
+ */
 class CommandersContainer extends Component<Props> {
   render() {
     return (
       <div>
         {
-          this.props.commanders.map((oCommander) => (
+          this.props.commanders.map(oCommander => (
             <Commander
               key={oCommander.multiverse_ids[0]}
               commander={oCommander}
