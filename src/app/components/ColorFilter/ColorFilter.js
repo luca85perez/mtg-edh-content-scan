@@ -4,8 +4,8 @@ import './ColorFilter.scss';
 import ColorOption from './ColorOption/ColorOption';
 
 type Props = {
-  onFilter: any,
-  onClearFilter: any,
+  onFilter: Function,
+  onClearFilter: Function,
 };
 
 /**

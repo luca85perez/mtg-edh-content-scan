@@ -6,7 +6,10 @@ import Commander from '../Commander';
 describe('Commander', () => {
   it('renders without crashing', () => {
     const mockCommander = {
-      name: 'Tester'
+      name: 'Tester',
+      image_uris: {
+        small: 'small.jpg',
+      },
     };
 
     const wrapper = shallow(

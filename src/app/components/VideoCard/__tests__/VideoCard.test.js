@@ -6,6 +6,9 @@ import VideoCard from '../VideoCard';
 describe('VideoCard', () => {
   it('renders without crashing', () => {
     const mockVideo = {
+      id: {
+        videoId: '123456',
+      },
       snippet: {
         thumbnails: {
           default: {

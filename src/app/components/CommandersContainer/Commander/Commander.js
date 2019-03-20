@@ -2,14 +2,31 @@ import React from 'react';
 
 import './Commander.scss';
 
-const Commander = ({ commander, onSelect }) => (
+type Props = {
+  commander: {
+    name: string;
+    image_uris: {
+      small: string;
+    };
+  };
+  onSelect: Function;
+};
+
+/**
+ *
+ * @param {*} props
+ */
+const Commander = (props: Props) => (
   <div>
     <a
-      href={`#${commander.name}`}
-      onClick={() => onSelect(commander.name)}>
-      {commander.name}
+      href={`#${props.commander.name}`}
+      onClick={() => props.onSelect(props.commander.name)}>
+      {props.commander.name}
     </a>
-    {/* <img src={commander.image_uris.small} alt={commander.name} /> */}
+    <img
+      src={props.commander.image_uris.small}
+      alt={props.commander.name}
+      hidden />
   </div>
 );
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './App.scss';
 
+import config from '../../data/config';
 import ColorFilter from '../ColorFilter/ColorFilter';
 import CommandersContainer from '../CommandersContainer/CommandersContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
@@ -13,13 +14,46 @@ import ResultsContainer from '../ResultsContainer/ResultsContainer';
  * @extends {Component}
  */
 class App extends Component {
+  /**
+   *Creates an instance of App.
+   * @memberof App
+   */
   constructor() {
     super();
 
     this.state = {
       commanders: [],
       videos: [],
+      nextPageToken: null,
+      selectedCommanderName: null,
     };
+  }
+
+  /**
+   *
+   *
+   * @memberof App
+   */
+  componentDidMount() {
+    window.onscroll = () => {
+      const hasScrolledToBottom: boolean = (
+        (window.innerHeight + document.documentElement.scrollTop)
+        === document.documentElement.offsetHeight
+      );
+
+      if (hasScrolledToBottom) {
+        this.onScrolledToBottom();
+      }
+    }
+  }
+
+  /**
+   *
+   *
+   * @memberof App
+   */
+  componentWillMount() {
+    window.onscroll = () => {}
   }
 
   /**
@@ -31,7 +65,11 @@ class App extends Component {
     this.setState({
       commanders: [],
       videos: [],
+      nextPageToken: null,
+      selectedCommanderName: null,
     });
+
+    return this.state;
   }
 
   /**
@@ -40,30 +78,37 @@ class App extends Component {
    * @memberof App
    */
   onColorFilter = state => {
-    const checkedItens = state.checkedItems;
-    const selectedColors = [];
-    checkedItens.forEach((isChecked, name) => {
-      if (isChecked) {
-        selectedColors.push(name);
+    return new Promise((resolve) => {
+      const checkedItens = state.checkedItems;
+      const selectedColors = [];
+
+      checkedItens.forEach((isChecked: boolean, name: string) => {
+        if (isChecked) {
+          selectedColors.push(name);
+        }
+      });
+
+      if (selectedColors.length) {
+        fetch(
+          `https://api.scryfall.com/cards/search?q=identity=${selectedColors.join('')}+is:commander`
+        )
+          .then(response => response.json())
+          .then(result => {
+            const { data } = result;
+
+            this.setState({
+              commanders: data,
+            });
+
+            resolve(this.state);
+          })
+          .catch(err => {
+            resolve(new Error(err));
+          });
+      } else {
+        resolve(false);
       }
     });
-
-    if (selectedColors.length) {
-      fetch(
-        `https://api.scryfall.com/cards/search?q=identity=${selectedColors.join('')}+is:commander`
-      )
-      .then(response => response.json())
-      .then(result => {
-        const { data } = result;
-
-        this.setState({
-          commanders: data,
-        });
-      })
-      .catch(err => {
-        console.error('Failed retrieving information', err);
-      });
-    }
   }
 
   /**
@@ -71,21 +116,48 @@ class App extends Component {
    *
    * @memberof App
    */
-  onCommanderSelect = name => {
-    fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${name}+edh&order=viewCount&type=video&key=AIzaSyAXzdppHQxlLzFc9UV9SmcIdLz9zEtkA50`
-    )
-    .then(response => response.json())
-    .then(result => {
-      const { items } = result;
+  onCommanderSelect = (name: string, pageToken?: string) => {
+    const options: string[] = [
+      'part=snippet',
+      `q=${name.replace(/\s/g, '+')}+edh`,
+      'order=date',
+      'type=video',
+      'maxResults=50',
+      `key=${config.api.youtube}`,
+    ];
 
-      this.setState({
-        videos: items,
+    if (pageToken) {
+      options.push(`pageToken=${pageToken}`);
+    }
+
+    fetch(`https://www.googleapis.com/youtube/v3/search?${options.join('&')}`)
+      .then(response => response.json())
+      .then(result => {
+        const { items, nextPageToken } = result;
+
+        this.setState(prevState => ({
+          videos: [...prevState.videos, ...items],
+          nextPageToken,
+          selectedCommanderName: name,
+        }));
+      })
+      .catch(err => {
+        throw new Error(err);
       });
-    })
-    .catch(err => {
-      console.error('Failed retrieving information', err);
-    });
+  }
+
+  /**
+   *
+   *
+   * @memberof App
+   */
+  onScrolledToBottom = () => {
+    if (this.state.nextPageToken) {
+      this.onCommanderSelect(
+        this.state.selectedCommanderName,
+        this.state.nextPageToken
+      )
+    }
   }
 
   /**
@@ -107,6 +179,7 @@ class App extends Component {
         />
         <ResultsContainer
           videos={this.state.videos}
+          posts={this.state.posts}
         />
       </div>
     );

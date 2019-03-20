@@ -2,15 +2,27 @@ import React from 'react';
 
 import './ColorOption.scss';
 
-const ColorOption = ({ option, checked, onChange }) => (
+type Props = {
+  option: {
+    longName: string;
+  };
+  checked: boolean;
+  onChange: Function;
+};
+
+/**
+ *
+ * @param {*} props
+ */
+const ColorOption = (props: Props) => (
   <div>
     <label>
       <input
         type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e, option)}
+        checked={props.checked}
+        onChange={(e) => props.onChange(e, props.option)}
       />
-      <span>{option.longName}</span>
+      <span>{props.option.longName}</span>
     </label>
   </div>
 );

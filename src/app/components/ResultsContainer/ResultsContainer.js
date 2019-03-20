@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import './ResultsContainer.scss';
 
@@ -30,21 +30,21 @@ type Props = {
   }>,
 };
 
-class ResultsContainer extends Component<Props> {
-  render() {
-    return (
-      <div>
-        {
-          this.props.videos.map((video) => (
-            <VideoCard
-              key={video.id.videoId}
-              video={video}
-            />
-          ))
-        }
-      </div>
-    )
-  }
-}
+/**
+ *
+ * @param {*} props
+ */
+const ResultsContainer = (props: Props) => (
+  <div>
+    {
+      props.videos.map((video) => (
+        <VideoCard
+          key={video.id.videoId}
+          video={video}
+        />
+      ))
+    }
+  </div>
+);
 
 export default ResultsContainer;
