@@ -67,6 +67,8 @@ class ColorFilter extends Component<Props> {
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(option.name, isChecked)
     }));
+
+    return this.state;
   }
 
   /**
@@ -76,15 +78,16 @@ class ColorFilter extends Component<Props> {
    */
   onClear = () => {
     const checkedItems = new Map();
+
     this.state.availableColors.map(color => {
       return checkedItems.set(color.name, false)
     });
-
     this.setState({
       checkedItems,
     });
-
     this.props.onClearFilter();
+
+    return this.state;
   }
 
   /**
@@ -95,7 +98,7 @@ class ColorFilter extends Component<Props> {
    */
   render() {
     return (
-      <div>
+      <React.Fragment>
         {
           this.state.availableColors.map(color => {
             return (
@@ -109,9 +112,9 @@ class ColorFilter extends Component<Props> {
           })
         }
 
-        <button onClick={() => this.props.onFilter(this.state)}>Pesquisar</button>
-        <button onClick={this.onClear}>Limpar</button>
-      </div>
+        <button id="filter" onClick={() => this.props.onFilter(this.state)}>Pesquisar</button>
+        <button id="clear" onClick={this.onClear}>Limpar</button>
+      </React.Fragment>
     );
   }
 }

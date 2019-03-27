@@ -168,7 +168,7 @@ class App extends Component {
    */
   render() {
     return (
-      <div>
+      <React.Fragment>
         <ColorFilter
           onFilter={this.onColorFilter}
           onClearFilter={this.onClearFilter}
@@ -181,7 +181,7 @@ class App extends Component {
           videos={this.state.videos}
           posts={this.state.posts}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

@@ -24,7 +24,7 @@ type Props = {
 class CommandersContainer extends Component<Props> {
   render() {
     return (
-      <div>
+      <React.Fragment>
         {
           this.props.commanders.map(oCommander => (
             <Commander
@@ -34,7 +34,7 @@ class CommandersContainer extends Component<Props> {
             />
           ))
         }
-      </div>
+      </React.Fragment>
     );
   }
 }

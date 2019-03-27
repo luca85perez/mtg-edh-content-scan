@@ -4,24 +4,28 @@ import { shallow } from 'enzyme';
 import CommandersContainer from '../CommandersContainer';
 
 describe('CommandersContainer', () => {
-  it('renders without crashing', () => {
-    const mockCommanders = [
-      {
-        name: 'Tester',
-        multiverse_ids: [0],
-      },
-      {
-        name: 'Testeradon',
-        multiverse_ids: [666],
-      },
-    ];
+  let component;
+  const mockCommanders = [
+    {
+      name: 'Tester',
+      multiverse_ids: [0],
+    },
+    {
+      name: 'Testeradon',
+      multiverse_ids: [666],
+    },
+  ];
 
-    const wrapper = shallow(
+  beforeEach(() => {
+    component = shallow(
       <CommandersContainer
         commanders={mockCommanders}
         onCommanderSelect={() => true}
       />
     );
-    expect(wrapper).toBeTruthy();
+  });
+
+  it('renders without crashing', () => {
+    expect(component).toBeTruthy();
   });
 });

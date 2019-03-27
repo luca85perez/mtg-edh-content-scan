@@ -44,7 +44,7 @@ describe('App', () => {
     expect(componentInstance.state).toEqual(expectedState);
   });
 
-  it('onColorFilter: should return {commanders} state', () => {
+  it('onColorFilter: should return [commanders] state', () => {
     // Golgari Swarm!
     const state = {
       checkedItems: new Map([
@@ -56,7 +56,7 @@ describe('App', () => {
     expect(componentInstance.onColorFilter(state)).resolves.toHaveProperty('commanders');
   });
 
-  it('onClearFilter: should return initial state', () => {
+  it('onClearFilter: should return component to initial state', () => {
     const expectedState = {
       commanders: [],
       videos: [],

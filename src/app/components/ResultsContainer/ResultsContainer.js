@@ -35,7 +35,7 @@ type Props = {
  * @param {*} props
  */
 const ResultsContainer = (props: Props) => (
-  <div>
+  <React.Fragment>
     {
       props.videos.map((video) => (
         <VideoCard
@@ -44,7 +44,7 @@ const ResultsContainer = (props: Props) => (
         />
       ))
     }
-  </div>
+  </React.Fragment>
 );
 
 export default ResultsContainer;

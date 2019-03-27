@@ -4,20 +4,37 @@ import { shallow } from 'enzyme';
 import Commander from '../Commander';
 
 describe('Commander', () => {
-  it('renders without crashing', () => {
-    const mockCommander = {
-      name: 'Tester',
-      image_uris: {
-        small: 'small.jpg',
-      },
-    };
+  let component;
+  const mockCommander = {
+    name: 'Tester',
+    image_uris: {
+      small: 'small.jpg',
+    },
+  };
 
-    const wrapper = shallow(
+  beforeEach(() => {
+    component = shallow(
       <Commander
         commander={mockCommander}
         onSelect={() => true}
       />
     );
-    expect(wrapper).toBeTruthy();
+  });
+
+  it('renders without crashing', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('href should call props function on click', () => {
+    const onSelectMock = jest.fn();
+    component = shallow(
+      <Commander
+        commander={mockCommander}
+        onSelect={onSelectMock}
+      />
+    );
+    component.find('a').simulate('click');
+
+    expect(onSelectMock).toHaveBeenCalled();
   });
 });
