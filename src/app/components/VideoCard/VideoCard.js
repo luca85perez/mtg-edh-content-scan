@@ -35,19 +35,23 @@ type Props = {
  * @param {*} props
  */
 const VideoCard = (props: Props) => (
-  <article>
+  <article className="card">
     <a
-      href={`https://www.youtube.com/watch?v=${props.video.id.videoId}`}
+      className="card__anchor"
+      href={`https://www.youtube.com/watch?v=${props.video.item_id.videoId}`}
       target="_blank"
       rel="noopener noreferrer">
-      <figure hidden>
+      <figure>
         <img src={props.video.snippet.thumbnails.default.url} alt={props.video.snippet.title} />
       </figure>
       <header>
-        <DateFormatter dateString={props.video.snippet.publishedAt} />
-        <br />
-        <small>{props.video.snippet.channelTitle}</small>
-        <h4>{props.video.snippet.title}</h4>
+        <div className="card__meta  container  flex-justify-content-space-between">
+          <small>{props.video.snippet.channelTitle}</small>
+          <small>
+            <DateFormatter dateString={props.video.snippet.publishedAt} />
+          </small>
+        </div>
+        <h2 className="card__title">{props.video.snippet.title}</h2>
       </header>
       <div>
         <p>{props.video.snippet.description}</p>

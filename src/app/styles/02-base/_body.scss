@@ -1,0 +1,10 @@
+@include scrollbars(ms(-1, $ms-ratio), $color-accent, $color-secondary);
+
+body {
+  background: $color-primary;
+  color: $color-light;
+  font-family: 'Muli', sans-serif;
+  font-size: ms(0, $ms-ratio);
+  line-height: ms(1, $ms-ratio);
+  padding: $blh;
+}

@@ -24,17 +24,17 @@ type Props = {
 class CommandersContainer extends Component<Props> {
   render() {
     return (
-      <React.Fragment>
+      <div className="container">
         {
-          this.props.commanders.map(oCommander => (
+          this.props.commanders.map((oCommander, index) => (
             <Commander
-              key={oCommander.multiverse_ids[0]}
+              key={index}
               commander={oCommander}
               onSelect={this.props.onCommanderSelect}
             />
           ))
         }
-      </React.Fragment>
+      </div>
     );
   }
 }

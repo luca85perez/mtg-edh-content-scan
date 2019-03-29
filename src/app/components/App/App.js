@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+import gql from 'graphql-tag';
 
-import './App.scss';
-
-import config from '../../data/config';
 import ColorFilter from '../ColorFilter/ColorFilter';
 import CommandersContainer from '../CommandersContainer/CommandersContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
+
+import './App.scss';
 
 /**
  *
@@ -27,6 +29,10 @@ class App extends Component {
       nextPageToken: null,
       selectedCommanderName: null,
     };
+
+    this.client = new ApolloClient({
+      uri: 'https://mtg-edh-content-scan.herokuapp.com/',
+    });
   }
 
   /**
@@ -88,26 +94,34 @@ class App extends Component {
         }
       });
 
-      if (selectedColors.length) {
-        fetch(
-          `https://api.scryfall.com/cards/search?q=identity=${selectedColors.join('')}+is:commander`
-        )
-          .then(response => response.json())
-          .then(result => {
-            const { data } = result;
-
-            this.setState({
-              commanders: data,
-            });
-
-            resolve(this.state);
-          })
-          .catch(err => {
-            resolve(new Error(err));
-          });
-      } else {
-        resolve(false);
+      if (!selectedColors.length) {
+        return resolve(false);
       }
+
+      this.client.query({
+        query: gql`
+          query($selectedColors: String!) {
+            commanders(colors: $selectedColors) {
+              name
+              multiverse_ids
+              image_uris {
+                small
+              }
+            }
+          }
+        `,
+        variables: {
+          selectedColors: selectedColors.join(''),
+        }
+      }).then(({ data }) => {
+        const { commanders } = data;
+
+        this.setState({
+          commanders,
+        });
+
+        return resolve(this.state);
+      });
     });
   }
 
@@ -117,33 +131,59 @@ class App extends Component {
    * @memberof App
    */
   onCommanderSelect = (name: string, pageToken?: string) => {
-    const options: string[] = [
-      'part=snippet',
-      `q=${name.replace(/\s/g, '+')}+edh`,
-      'order=date',
-      'type=video',
-      'maxResults=50',
-      `key=${config.api.youtube}`,
-    ];
+    this.client.query({
+      query: gql`
+        query($name: String! $pageToken: String) {
+          videos(name: $name pageToken: $pageToken) {
+            items {
+              item_id: id {
+                videoId
+              }
+              snippet {
+                channelId
+                channelTitle
+                description
+                publishedAt
+                thumbnails {
+                  default {
+                    url
+                  }
+                  high {
+                    url
+                  }
+                  medium {
+                    url
+                  }
+                }
+                title
+              }
+            }
+            nextPageToken
+          }
+        }
+      `,
+      variables: {
+        name,
+        pageToken,
+      }
+    }).then((response) => {
+      const { data } = response;
+      const { videos } = data;
+      const { nextPageToken, items } = videos;
 
-    if (pageToken) {
-      options.push(`pageToken=${pageToken}`);
-    }
-
-    fetch(`https://www.googleapis.com/youtube/v3/search?${options.join('&')}`)
-      .then(response => response.json())
-      .then(result => {
-        const { items, nextPageToken } = result;
-
+      if (name === this.state.selectedCommanderName) {
         this.setState(prevState => ({
           videos: [...prevState.videos, ...items],
           nextPageToken,
-          selectedCommanderName: name,
         }));
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
+      } else {
+        this.setState({
+          videos: items,
+          nextPageToken,
+          selectedCommanderName: name,
+        });
+      }
+    });
   }
 
   /**
@@ -169,18 +209,23 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <ColorFilter
-          onFilter={this.onColorFilter}
-          onClearFilter={this.onClearFilter}
-        />
-        <CommandersContainer
-          commanders={this.state.commanders}
-          onCommanderSelect={this.onCommanderSelect}
-        />
-        <ResultsContainer
-          videos={this.state.videos}
-          posts={this.state.posts}
-        />
+        <ApolloProvider client={this.client}>
+          <h1 className="app-title">MTG EDH Content Scan</h1>
+          <div className="container  container--medium">
+            <ColorFilter
+              onFilter={this.onColorFilter}
+              onClearFilter={this.onClearFilter}
+            />
+          </div>
+
+          <div className="container">
+            <CommandersContainer
+              commanders={this.state.commanders}
+              onCommanderSelect={this.onCommanderSelect}
+            />
+            <ResultsContainer videos={this.state.videos} />
+          </div>
+        </ApolloProvider>
       </React.Fragment>
     );
   }

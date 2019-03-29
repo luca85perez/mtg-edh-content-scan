@@ -1,0 +1,14 @@
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@for $size from 1 to 7 {
+  h#{$size} {
+    font-family: 'Ovo', serif;
+    font-size: ms((7 - $size), $ms-ratio);
+    line-height: ms((7 - $size), $ms-ratio);
+    margin: 0;
+    margin-bottom: $blh;
+  }
+}

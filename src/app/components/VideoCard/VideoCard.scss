@@ -1,0 +1,25 @@
+@import '../../styles/01-tools/Tools';
+
+.card {
+  background: $color-secondary;
+  border-radius: $blh;
+  box-shadow: 0 ($blh / 2) ($blh * 2) 0 darken($color-primary, 4);
+  color: $color-light;
+  flex: 1 1 ($blh * 20);
+  margin: $blh auto;
+
+  &__anchor {
+    display: block;
+    padding: $blh;
+  }
+
+  &__meta {
+    color: lighten($color-secondary, 30);
+  }
+
+  &__title {
+    font-size: ms(1, $ms-ratio);
+    line-height: $ms-ratio;
+    margin: $blh 0;
+  }
+}

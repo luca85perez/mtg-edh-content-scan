@@ -35,16 +35,16 @@ type Props = {
  * @param {*} props
  */
 const ResultsContainer = (props: Props) => (
-  <React.Fragment>
+  <div className="container">
     {
-      props.videos.map((video) => (
+      props.videos.map((video, index) => (
         <VideoCard
-          key={video.id.videoId}
+          key={index}
           video={video}
         />
       ))
     }
-  </React.Fragment>
+  </div>
 );
 
 export default ResultsContainer;

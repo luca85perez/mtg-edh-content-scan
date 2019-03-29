@@ -98,23 +98,42 @@ class ColorFilter extends Component<Props> {
    */
   render() {
     return (
-      <React.Fragment>
-        {
-          this.state.availableColors.map(color => {
-            return (
-              <ColorOption
-                key={color.name}
-                option={color}
-                checked={this.state.checkedItems.get(color.name)}
-                onChange={this.onColorOption}
-              />
-            );
-          })
-        }
+      <div className="container  filter">
+        <legend className="flex-auto">
+          Please, select desired Commander identity colors
+        </legend>
+        <div className="container  flex-direction-column">
+          <div className="container">
+            {
+              this.state.availableColors.map(color => {
+                return (
+                  <ColorOption
+                    key={color.name}
+                    option={color}
+                    checked={this.state.checkedItems.get(color.name)}
+                    onChange={this.onColorOption}
+                  />
+                );
+              })
+            }
+          </div>
 
-        <button id="filter" onClick={() => this.props.onFilter(this.state)}>Pesquisar</button>
-        <button id="clear" onClick={this.onClear}>Limpar</button>
-      </React.Fragment>
+          <div className="container">
+            <button
+              id="filter"
+              className="theme-secondary"
+              onClick={() => this.props.onFilter(this.state)}>
+              Search
+            </button>
+            <button
+              id="clear"
+              className="theme-secondary"
+              onClick={this.onClear}>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 }

@@ -1,0 +1,15 @@
+@function modular-scale($pos, $ratio) {
+  $base: 1rem;
+
+  @if $pos == 0 {
+    @return $base;
+  } @else if $pos < 0 {
+    @return $base / ($ratio * abs($pos));
+  } @else {
+    @return $base * ($ratio * $pos);
+  }
+}
+
+@function ms($pos, $ratio) {
+  @return modular-scale($pos, $ratio);
+}

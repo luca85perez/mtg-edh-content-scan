@@ -1,0 +1,29 @@
+@for $size from 1 through 10 {
+  .flex-#{$size} {
+    flex: $size;
+  }
+}
+
+.flex-auto {
+  flex: auto;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.flex-direction-row {
+  flex-direction: row;
+}
+
+.flex-direction-column-reverse {
+  flex-direction: column-reverse;
+}
+
+.flex-direction-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-justify-content-space-between {
+  justify-content: space-between;
+}

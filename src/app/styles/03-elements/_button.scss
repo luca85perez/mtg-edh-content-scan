@@ -1,0 +1,53 @@
+button {
+  border: 0;
+  border-radius: $blh * 2;
+  box-shadow: 0 ($blh / 2) ($blh * 2) 0 darken($color-primary, 4);
+  cursor: pointer;
+  margin: $blh / 2;
+  outline: 0;
+  padding: ($blh / 2) ($blh * 2);
+
+  &.theme-primary {
+    background: $color-primary;
+    color: $color-accent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: lighten($color-primary, 15);
+    }
+  }
+
+  &.theme-secondary {
+    background: $color-secondary;
+    color: $color-accent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: lighten($color-secondary, 15);
+    }
+  }
+
+  &.theme-accent {
+    background: $color-accent;
+    color: $color-primary;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: lighten($color-accent, 15);
+    }
+  }
+
+  &.theme-action {
+    background: $color-action;
+    color: $color-accent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: lighten($color-action, 15);
+    }
+  }
+}

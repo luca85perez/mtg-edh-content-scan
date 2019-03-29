@@ -4,6 +4,7 @@ import './ColorOption.scss';
 
 type Props = {
   option: {
+    name: string;
     longName: string;
   };
   checked: boolean;
@@ -16,14 +17,13 @@ type Props = {
  */
 const ColorOption = (props: Props) => (
   <div>
-    <label>
-      <input
-        type="checkbox"
-        checked={props.checked}
-        onChange={(e) => props.onChange(e, props.option)}
-      />
-      <span>{props.option.longName}</span>
-    </label>
+    <input
+      id={props.option.name}
+      type="checkbox"
+      checked={props.checked}
+      onChange={(e) => props.onChange(e, props.option)}
+    />
+    <label htmlFor={props.option.name}>{props.option.longName}</label>
   </div>
 );
 
